@@ -6,12 +6,13 @@ Use maven plugin to generate project documentation.
 
 == Glossary
 
-Generate a glossary from code analysis :
+description::
+Generate a glossary document from code analysis :
 
-* the entry is a class marked with a specific annotation
+* the entry is a the name of a class marked with a specific annotation
 * the definition is the javadoc of this class
 
-mojo:: glossary
+mojo:: `glossary`
 
 === Configuration
 
@@ -24,6 +25,18 @@ sources:: the source folder to scan (default is `src/main/java`)
 outputDirectory:: the outpout directory (default is `target/generated-docs`)
 
 === Usage
+
+.Code
+[source, java]
+----
+/**
+    A little pet with a pv and hp
+ */
+@Glossary
+public class Pokemon {
+...
+}
+----
 
 .Maven
 [source, xml]
@@ -43,3 +56,5 @@ outputDirectory:: the outpout directory (default is `target/generated-docs`)
         </executions>
     </plugin>
 ----
+
+
