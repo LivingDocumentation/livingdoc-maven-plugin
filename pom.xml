@@ -4,88 +4,29 @@
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>org.livingdocumentation</groupId>
-    <artifactId>livingdoc-maven-plugin</artifactId>
+    <artifactId>livingdoc</artifactId>
     <version>1.0-SNAPSHOT</version>
-    <packaging>maven-plugin</packaging>
+    <modules>
+        <module>livingdoc-maven-plugin</module>
+        <module>shared-resources</module>
+    </modules>
+    <packaging>pom</packaging>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>1.8</maven.compiler.source>
         <maven.compiler.target>1.8</maven.compiler.target>
+        <junit.version>4.12</junit.version>
     </properties>
 
-    <dependencies>
-        <dependency>
-            <groupId>org.asciidoctor</groupId>
-            <artifactId>asciidoctorj</artifactId>
-            <version>1.5.4</version>
-        </dependency>
-        <dependency>
-            <groupId>io.github.robwin</groupId>
-            <artifactId>markup-document-builder</artifactId>
-            <version>0.1.5</version>
-        </dependency>
-        <dependency>
-            <groupId>com.thoughtworks.qdox</groupId>
-            <artifactId>qdox</artifactId>
-            <version>2.0-M3</version>
-        </dependency>
-        
-        <dependency>
-            <groupId>org.apache.maven.plugin-tools</groupId>
-            <artifactId>maven-plugin-annotations</artifactId>
-            <version>3.4</version>
-            <scope>provided</scope>
-        </dependency>
-         <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-core</artifactId>
-            <version>3.3.3</version>
-             <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-model</artifactId>
-            <version>3.3.3</version>
-            <scope>provided</scope>
-        </dependency>
-        <dependency>
-            <groupId>org.apache.maven</groupId>
-            <artifactId>maven-plugin-api</artifactId>
-            <version>3.3.3</version>
-            <scope>provided</scope>
-        </dependency>
-
-    </dependencies>
-
-    <build>
-        <plugins>
-            <plugin>
-                <!-- taken from http://maven.apache.org/plugin-tools/maven-plugin-plugin/examples/using-annotations.html -->
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-plugin-plugin</artifactId>
-                <version>3.4</version>
-                <configuration>
-                    <!-- see http://jira.codehaus.org/browse/MNG-5346 -->
-                    <skipErrorNoDescriptorsFound>true</skipErrorNoDescriptorsFound>
-                </configuration>
-                <executions>
-                    <execution>
-                        <id>mojo-descriptor</id>
-                        <goals>
-                            <goal>descriptor</goal>
-                        </goals>
-                    </execution>
-                    <!-- if you want to generate help goal -->
-                    <execution>
-                        <id>help-goal</id>
-                        <goals>
-                            <goal>helpmojo</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-        </plugins>
-    </build>
+    <dependencyManagement>
+        <dependencies>
+            <dependency>
+                <groupId>junit</groupId>
+                <artifactId>junit</artifactId>
+                <version>${junit.version}</version>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
 
 </project>
