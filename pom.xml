@@ -3,14 +3,45 @@
 
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>org.livingdocumentation</groupId>
+    <groupId>io.github.livingdocumentation</groupId>
     <artifactId>livingdoc</artifactId>
-    <version>1.0-SNAPSHOT</version>
+    <version>0.1</version>
     <modules>
         <module>livingdoc-maven-plugin</module>
         <module>shared-resources</module>
     </modules>
     <packaging>pom</packaging>
+
+    <name>${project.groupId}:${project.artifactId}</name>
+    <description>The living documnetation parent project</description>
+    <url>https://github.com/LivingDocumentation/livingdoc-maven-plugin</url>
+
+    <licenses>
+        <license>
+            <name>Apache License, Version 2.0</name>
+            <url>http://www.apache.org/licenses/LICENSE-2.0.txt</url>
+            <distribution>repo</distribution>
+        </license>
+    </licenses>
+
+    <developers>
+        <developer>
+            <name>Benoît Prioux</name>
+            <email>benoit.prioux@gmail.com</email>
+            <organizationUrl>https://github.com/binout</organizationUrl>
+        </developer>
+        <developer>
+            <name>Pascal Abaziou</name>
+            <email>pascal.abaziou@gmail.com</email>
+            <organizationUrl>https://github.com/javathought</organizationUrl>
+        </developer>
+    </developers>
+
+    <scm>
+        <connection>scm:git:git://github.com/LivingDocumentation/livingdoc-maven-plugin.git</connection>
+        <developerConnection>scm:git:ssh://github.com:LivingDocumentation/livingdoc-maven-plugin.git</developerConnection>
+        <url>http://github.com/LivingDocumentation/livingdoc-maven-plugin/tree/master</url>
+    </scm>
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -18,6 +49,17 @@
         <maven.compiler.target>1.8</maven.compiler.target>
         <junit.version>4.12</junit.version>
     </properties>
+
+    <distributionManagement>
+        <snapshotRepository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/content/repositories/snapshots</url>
+        </snapshotRepository>
+        <repository>
+            <id>ossrh</id>
+            <url>https://oss.sonatype.org/service/local/staging/deploy/maven2/</url>
+        </repository>
+    </distributionManagement>
 
     <dependencyManagement>
         <dependencies>
@@ -28,5 +70,66 @@
             </dependency>
         </dependencies>
     </dependencyManagement>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-source-plugin</artifactId>
+                <version>2.2.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-sources</id>
+                        <goals>
+                            <goal>jar-no-fork</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-javadoc-plugin</artifactId>
+                <version>2.9.1</version>
+                <executions>
+                    <execution>
+                        <id>attach-javadocs</id>
+                        <goals>
+                            <goal>jar</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-gpg-plugin</artifactId>
+                <version>1.5</version>
+                <executions>
+                    <execution>
+                        <id>sign-artifacts</id>
+                        <phase>verify</phase>
+                        <goals>
+                            <goal>sign</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>external.atlassian.jgitflow</groupId>
+                <artifactId>jgitflow-maven-plugin</artifactId>
+                <version>1.0-m5.1</version>
+                <configuration>
+                    <flowInitContext>
+                        <masterBranchName>master</masterBranchName>
+                        <developBranchName>develop</developBranchName>
+                        <featureBranchPrefix>feature/</featureBranchPrefix>
+                        <releaseBranchPrefix>release/</releaseBranchPrefix>
+                        <hotfixBranchPrefix>hotfix/</hotfixBranchPrefix>
+                        <versionTagPrefix>v</versionTagPrefix>
+                    </flowInitContext>
+                    <scmCommentPrefix>[RELEASE] </scmCommentPrefix>
+                </configuration>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>
