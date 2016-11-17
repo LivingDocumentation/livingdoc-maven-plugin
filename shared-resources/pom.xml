@@ -10,7 +10,7 @@
     <artifactId>shared-resources</artifactId>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>The living documnetation dependencies needed for html docs</description>
+    <description>The living documentation dependencies needed for html docs</description>
 
     <build>
         <plugins>

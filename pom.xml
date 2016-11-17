@@ -13,7 +13,7 @@
     <packaging>pom</packaging>
 
     <name>${project.groupId}:${project.artifactId}</name>
-    <description>The living documnetation parent project</description>
+    <description>The living documentation parent project</description>
     <url>https://github.com/LivingDocumentation/livingdoc-maven-plugin</url>
 
     <licenses>
