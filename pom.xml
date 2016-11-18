@@ -127,6 +127,7 @@
                         <versionTagPrefix>v</versionTagPrefix>
                     </flowInitContext>
                     <scmCommentPrefix>[RELEASE] </scmCommentPrefix>
+                    <autoVersionSubmodules>true</autoVersionSubmodules>
                 </configuration>
             </plugin>
         </plugins>
