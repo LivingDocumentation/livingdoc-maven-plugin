@@ -1,0 +1,57 @@
+= Word Cloud
+
+== Description
+
+Generate a word cloud from code analysis :
+
+* the entry is a the name of a class marked with a specific annotation
+* the definition is the javadoc of this class
+
+mojo:: `wordcloud`
+
+== Configuration
+
+sources:: the source folder to scan (default is `src/main/java`)
+
+outputDirectory:: the outpout directory (default is `target/generated-docs`)
+
+The plugin need the `maven-remote-resources-plugin` to import html dependencies (js, css) for the doc.
+
+== Usage
+
+.Maven
+[source, xml]
+----
+            <plugin>
+                <groupId>io.github.livingdocumentation</groupId>
+                <artifactId>livingdoc-maven-plugin</artifactId>
+                <version>${plugin.livingdoc-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>wordcloud</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>wordcloud</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+            <plugin>
+                <groupId>org.apache.maven.plugins</groupId>
+                <artifactId>maven-remote-resources-plugin</artifactId>
+                <version>1.5</version>
+                <configuration>
+                    <resourceBundles>
+                        <resourceBundle>io.github.livingdocumentation:shared-resources:${plugin.livingdoc-maven-plugin.version}</resourceBundle>
+                    </resourceBundles>
+                    <outputDirectory>target/generated-docs</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>process</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+----

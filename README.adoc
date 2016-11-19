@@ -4,112 +4,18 @@
 
 Use maven plugin to generate project documentation.
 
-== Glossary
+== Mojos
 
-description::
-Generate a glossary document from code analysis :
+Plugin provides following mojos to generate different kind of documentation.
 
-* the entry is a the name of a class marked with a specific annotation
-* the definition is the javadoc of this class
+ifndef::env-github[]
+:leveloffset: +2
+endif::[]
 
-mojo:: `glossary`
+include::livingdoc-maven-plugin/src/site/asciidoc/glossary.adoc[]
 
-=== Configuration
+include::livingdoc-maven-plugin/src/site/asciidoc/wordcloud.adoc[]
 
-annotation:: the short name of annotation used to find glossary entries (default is `Glossary`)
-
-format:: the format of output document : `asciidoc`, `html` (default is `html`)
-
-sources:: the source folder to scan (default is `src/main/java`)
-
-outputDirectory:: the outpout directory (default is `target/generated-docs`)
-
-=== Usage
-
-.Code
-[source, java]
-----
-/**
-    A little pet with a pv and hp
- */
-@Glossary
-public class Pokemon {
-...
-}
-----
-
-.Maven
-[source, xml]
-----
-    <plugin>
-        <groupId>io.github.livingdocumentation</groupId>
-        <artifactId>livingdoc-maven-plugin</artifactId>
-        <version>${plugin.livingdoc-maven-plugin.version}</version>
-        <executions>
-            <execution>
-                <id>glossary</id>
-                <phase>generate-resources</phase>
-                <goals>
-                    <goal>glossary</goal>
-                </goals>
-            </execution>
-        </executions>
-    </plugin>
-----
-
-== Word Cloud
-
-description::
-Generate a word cloud from code analysis :
-
-* the entry is a the name of a class marked with a specific annotation
-* the definition is the javadoc of this class
-
-mojo:: `wordcloud`
-
-=== Configuration
-
-sources:: the source folder to scan (default is `src/main/java`)
-
-outputDirectory:: the outpout directory (default is `target/generated-docs`)
-
-The plugin need the `maven-remote-resources-plugin` to import html dependencies (js, css) for the doc.
-
-=== Usage
-
-.Maven
-[source, xml]
-----
-            <plugin>
-                <groupId>io.github.livingdocumentation</groupId>
-                <artifactId>livingdoc-maven-plugin</artifactId>
-                <version>${plugin.livingdoc-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>wordcloud</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>wordcloud</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-remote-resources-plugin</artifactId>
-                <version>1.5</version>
-                <configuration>
-                    <resourceBundles>
-                        <resourceBundle>io.github.livingdocumentation:shared-resources:${plugin.livingdoc-maven-plugin.version}</resourceBundle>
-                    </resourceBundles>
-                    <outputDirectory>target/generated-docs</outputDirectory>
-                </configuration>
-                <executions>
-                    <execution>
-                        <goals>
-                            <goal>process</goal>
-                        </goals>
-                    </execution>
-                </executions>
-            </plugin>
-----
+ifndef::env-github[]
+:leveloffset: -2
+endif::[]

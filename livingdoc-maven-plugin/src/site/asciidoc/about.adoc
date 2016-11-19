@@ -1,0 +1,5 @@
+= About
+
+== Objective
+
+This maven plugin provides a list of living documentation.
