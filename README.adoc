@@ -4,6 +4,10 @@
 
 Use maven plugin to generate project documentation.
 
+The complete documentation is available at :
+
+https://livingdocumentation.github.io/livingdoc-maven-plugin/
+
 == Mojos
 
 Plugin provides following mojos to generate different kind of documentation.
@@ -19,3 +23,25 @@ include::livingdoc-maven-plugin/src/site/asciidoc/wordcloud.adoc[]
 ifndef::env-github[]
 :leveloffset: -2
 endif::[]
+
+== Deploy maven site
+
+=== Pre-requisite
+
+Open your Maven settings (~/.m2/settings.xml) and add the following server configuration:
+
+[source, xml]
+----
+<server>
+    <id>github</id>
+    <username>YOUR_GITHUB_USERNAME</username>
+    <password>YOUR_PASSWORD</password>
+</server>
+----
+
+=== Command
+
+[source]
+----
+mvn clean post-site -Pdeploy-site
+----
