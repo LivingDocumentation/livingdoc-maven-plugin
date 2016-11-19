@@ -24,24 +24,7 @@ ifndef::env-github[]
 :leveloffset: -2
 endif::[]
 
-== Deploy maven site
+== Documentation site
 
-=== Pre-requisite
+The documentation site is available at https://livingdocumentation.github.io/livingdoc-maven-plugin/
 
-Open your Maven settings (~/.m2/settings.xml) and add the following server configuration:
-
-[source, xml]
-----
-<server>
-    <id>github</id>
-    <username>YOUR_GITHUB_USERNAME</username>
-    <password>YOUR_PASSWORD</password>
-</server>
-----
-
-=== Command
-
-[source]
-----
-mvn clean post-site -Pdeploy-site
-----
