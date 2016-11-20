@@ -1,4 +1,4 @@
-package io.github.livingdocumentation;
+package io.github.livingdocumentation.maven;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
