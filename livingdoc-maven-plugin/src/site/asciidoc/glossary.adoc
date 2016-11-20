@@ -4,7 +4,7 @@
 
 Generate a glossary document from code analysis :
 
-* the entry is a the name of a class marked with a specific annotation
+* the entry is the name of a class marked with a specific annotation
 * the definition is the javadoc of this class
 
 mojo:: `glossary`

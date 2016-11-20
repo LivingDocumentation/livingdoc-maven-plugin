@@ -1,0 +1,14 @@
+= Introduction
+
+== Objective
+
+The Living Documentation Plugin for Maven is intended to provide users
+a list of generated documentation from code analysis.
+
+== Living Documentation
+
+If you want to learn more about Living Documentation, you can read the book written
+by Cyrille Martraire :
+
+.https://leanpub.com/livingdocumentation
+image::https://s3.amazonaws.com/titlepages.leanpub.com/livingdocumentation/hero?1468687808[]

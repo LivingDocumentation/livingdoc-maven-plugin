@@ -23,8 +23,3 @@ include::livingdoc-maven-plugin/src/site/asciidoc/wordcloud.adoc[]
 ifndef::env-github[]
 :leveloffset: -2
 endif::[]
-
-== Documentation site
-
-The documentation site is available at https://livingdocumentation.github.io/livingdoc-maven-plugin/
-
