@@ -1,3 +1,5 @@
+package io.github.livingdocumentation.maven;
+
 import org.junit.Ignore;
 import org.junit.Test;
 
@@ -5,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 
-import static maven.SimpleTemplate.*;
+import static io.github.livingdocumentation.maven.SimpleTemplate.*;
 
 public class DummyTemplatingTest {
 

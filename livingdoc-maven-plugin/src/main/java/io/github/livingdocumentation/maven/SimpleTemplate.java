@@ -1,17 +1,17 @@
-package maven;
+package io.github.livingdocumentation.maven;
 
 import java.io.*;
 
-public class SimpleTemplate {
+class SimpleTemplate {
 
-	public static String evaluate(final String template, String title, String content) {
+	static String evaluate(final String template, String title, String content) {
 		return template.replace("{0}", title).replace("{1}", content);
 	}
 
 	/**
 	 * @return A String that represents the content of the file
 	 */
-	public static String readResource(final String filename) {
+	static String readResource(final String filename) {
 		String lineSep = String.format("%n");
 		final StringBuffer buffer = new StringBuffer();
 		try {
@@ -29,7 +29,7 @@ public class SimpleTemplate {
 		return buffer.toString();
 	}
 
-	public static void write(String path, String filename, String content) throws UnsupportedEncodingException,
+	static void write(String path, String filename, String content) throws UnsupportedEncodingException,
 			FileNotFoundException {
 		final String outputFileName = path + filename;
 		final String outputEncoding = "ISO-8859-1";
