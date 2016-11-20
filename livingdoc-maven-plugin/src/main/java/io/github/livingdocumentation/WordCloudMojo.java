@@ -1,4 +1,4 @@
-package maven;
+package io.github.livingdocumentation;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
@@ -9,8 +9,6 @@ import org.apache.maven.plugins.annotations.Parameter;
 import java.io.*;
 import java.nio.file.Files;
 import java.util.*;
-
-import static maven.SimpleTemplate.*;
 
 @Mojo(name = "wordcloud")
 public class WordCloudMojo extends AbstractMojo {
@@ -117,13 +115,13 @@ public class WordCloudMojo extends AbstractMojo {
 			final int max = wordCloudMojo.getMax();
 			final double scaling = 50. / max;
 
-			final String template = readResource("/wordcloud-template.html");
+			final String template = SimpleTemplate.readResource("/wordcloud-template.html");
 
 			String title = "Word Cloud";
 			String content = toJSON(bag, scaling);
 
-			final String text = evaluate(template, title, content);
-			write("", outputDirectory + "/" + OUTPUT_FILENAME + ".html" , text);
+			final String text = SimpleTemplate.evaluate(template, title, content);
+			SimpleTemplate.write("", outputDirectory + "/" + OUTPUT_FILENAME + ".html" , text);
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);
 		}

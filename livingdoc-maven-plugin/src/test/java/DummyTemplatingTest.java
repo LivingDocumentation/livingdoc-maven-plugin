@@ -5,7 +5,7 @@ import java.io.FileNotFoundException;
 import java.io.UnsupportedEncodingException;
 import java.text.MessageFormat;
 
-import static maven.SimpleTemplate.*;
+import static io.github.livingdocumentation.SimpleTemplate.*;
 
 public class DummyTemplatingTest {
 

@@ -1,4 +1,4 @@
-package maven;
+package io.github.livingdocumentation;
 
 import com.thoughtworks.qdox.JavaProjectBuilder;
 import com.thoughtworks.qdox.model.JavaClass;
