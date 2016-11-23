@@ -12,6 +12,10 @@ sources:: the source folder to scan (default is `src/main/java`)
 
 outputDirectory:: the outpout directory (default is `target/generated-docs`)
 
+includes:: fileSets to include in the scan (default is `{"**/package-info.java"}`)
+
+excludes:: fileSets to exclude from the scan (default is `{"\**/*.java"}`)
+
 The plugin need the `maven-remote-resources-plugin` to import html dependencies (js, css) for the doc.
 
 == Usage
@@ -32,6 +36,15 @@ The plugin need the `maven-remote-resources-plugin` to import html dependencies 
                         </goals>
                     </execution>
                 </executions>
+                <configuration>
+                    <includes>
+                        <include>**/domain/**/*.java</include>
+                    </includes>
+                    <excludes>
+                        <exclude>**/annotations/**</exclude>
+                        <exclude>**/package-info.java</exclude>
+                    </excludes>
+                </configuration>
             </plugin>
             <plugin>
                 <groupId>org.apache.maven.plugins</groupId>
