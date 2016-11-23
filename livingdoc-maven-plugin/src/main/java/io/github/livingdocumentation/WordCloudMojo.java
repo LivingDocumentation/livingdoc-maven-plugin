@@ -5,6 +5,7 @@ import com.google.common.collect.Multiset;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.shared.utils.io.DirectoryScanner;
 
 import java.io.*;
 import java.nio.file.Files;
@@ -14,6 +15,8 @@ import java.util.*;
 public class WordCloudMojo extends AbstractMojo {
 
 	private static final String OUTPUT_FILENAME = "wordcloud";
+	private static final String[] DEFAULT_EXCLUDES = new String[] { "**/package-info.java" };
+	private static final String[] DEFAULT_INCLUDES = new String[] { "**/*.java" };
 
 	@Parameter(defaultValue = "${project.build.sourceDirectory}")
 	private List<String> sources;
@@ -21,6 +24,19 @@ public class WordCloudMojo extends AbstractMojo {
 	@Parameter(defaultValue = "${project.build.directory}/generated-docs")
 	private File outputDirectory;
 
+	/**
+	 * List of files to include. Specified as fileset patterns which are relative to the input directory whose contents
+	 * is being parsed to include in the cloud of words.
+	 */
+	@Parameter
+	private String[] includes = DEFAULT_INCLUDES;
+
+	/**
+	 * List of files to exclude. Specified as fileset patterns which are relative to the input directory whose contents
+	 * is being parsed to include in the cloud of words.
+	 */
+	@Parameter
+	private String[] excludes = DEFAULT_EXCLUDES;
 
 	// keywords to be ignored
 	private static final String[] KEYWORDS = { "abstract", "continue", "for", "new", "switch", "assert", "default",
@@ -46,12 +62,29 @@ public class WordCloudMojo extends AbstractMojo {
 	private int max = 0;
 
 	public void scan(final List<String> sourceFolders) throws IOException {
-		sourceFolders.forEach(folder -> { try {
-			scan(new File(folder));
-		}
-		catch(IOException e) {
-			throw new UncheckedIOException(e);
-		}});
+		sourceFolders.forEach(folder -> {
+			DirectoryScanner ds = new DirectoryScanner();
+			ds.setBasedir(folder);
+			ds.setIncludes(includes);
+			ds.setExcludes(excludes);
+			ds.scan();
+
+			Arrays.stream(ds.getIncludedFiles())
+					.forEach( f -> {
+						getLog().debug(String.format("file: %s", f));
+						File file = new File(ds.getBasedir(), f);
+
+						final String content;
+						try {
+							content = new String(Files.readAllBytes(file.toPath()));
+							filter(content);
+						} catch (IOException e) {
+							throw new UncheckedIOException(e);
+						}
+					}
+			);
+
+		});
 	}
 
 	public Multiset<String> getBag() {
@@ -60,19 +93,6 @@ public class WordCloudMojo extends AbstractMojo {
 
 	public int getMax() {
 		return max;
-	}
-
-	private void scan(final File f) throws IOException {
-		final File[] listOfFiles = f.listFiles();
-		for (File file : listOfFiles) {
-			if (file.isDirectory() && !file.getName().endsWith("annotations")) {
-				scan(file);
-			}
-			if (file.isFile() && file.getName().endsWith(".java")) {
-				final String content = new String(Files.readAllBytes(file.toPath()));
-				filter(content);
-			}
-		}
 	}
 
 	private void filter(final String content) {
@@ -104,15 +124,12 @@ public class WordCloudMojo extends AbstractMojo {
 	}
 
 	public void execute() {
-	// (final String sourceFolder, String outputFileName) throws IOException,
-//			UnsupportedEncodingException, FileNotFoundException {
-		final WordCloudMojo wordCloudMojo = new WordCloudMojo();
 
 		try {
-			wordCloudMojo.scan(sources);
+			scan(sources);
 
-			final Multiset<String> bag = wordCloudMojo.getBag();
-			final int max = wordCloudMojo.getMax();
+			final Multiset<String> bag = getBag();
+			final int max = getMax();
 			final double scaling = 50. / max;
 
 			final String template = SimpleTemplate.readResource("/wordcloud-template.html");
@@ -134,6 +151,13 @@ public class WordCloudMojo extends AbstractMojo {
 			sb.append(", ");
 		}
 		return sb.toString();
+	}
+
+	private String[] getIncludes() {
+		if (includes != null && includes.length > 0) {
+			return includes;
+		}
+		return DEFAULT_INCLUDES;
 	}
 
 }
