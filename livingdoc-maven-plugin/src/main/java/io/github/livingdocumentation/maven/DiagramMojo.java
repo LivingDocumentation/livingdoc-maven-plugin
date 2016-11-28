@@ -6,13 +6,23 @@ import com.google.common.reflect.ClassPath.ClassInfo;
 import io.github.livingdocumentation.dotdiagram.DotGraph;
 import io.github.livingdocumentation.dotdiagram.DotGraph.Cluster;
 import io.github.livingdocumentation.dotdiagram.DotGraph.Digraph;
+import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.Mojo;
+import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
+import org.apache.maven.project.MavenProject;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.io.UnsupportedEncodingException;
 import java.lang.reflect.Field;
+import java.net.MalformedURLException;
+import java.net.URL;
+import java.net.URLClassLoader;
+import java.util.List;
 import java.util.function.Consumer;
 import java.util.function.Predicate;
 import java.util.stream.Stream;
@@ -24,27 +34,46 @@ import static io.github.livingdocumentation.dotdiagram.DotStyles.IMPLEMENTS_EDGE
 /**
  * Living Diagram of the Hexagonal Architecture generated out of the code thanks
  * to the package naming conventions.
+ *
  */
+
+@Mojo(name = "diagram", requiresDependencyResolution = ResolutionScope.RUNTIME)
 public class DiagramMojo extends AbstractMojo {
 
 	private final DotGraph graph = new DotGraph("Hexagonal Architecture", "LR");
+
+	@Parameter(defaultValue="${project}", readonly=true, required=true)
+	private MavenProject project;
+
+	@Parameter
+	private String prefix;
+
+	@Parameter(defaultValue = "domain")
+	private String coreDomain;
+
+	@Parameter(defaultValue = "${project.build.directory}/generated-docs")
+	private File outputDirectory;
 
 	@Override
 	public void execute() throws MojoExecutionException {
 		final ClassPath classPath;
 		try {
-			classPath = ClassPath.from(Thread.currentThread().getContextClassLoader());
+//			classPath = ClassPath.from(Thread.currentThread().getContextClassLoader());
+			try {
+				classPath = ClassPath.from(getRuntimeClassLoader());
+			} catch (DependencyResolutionRequiredException e) {
+				throw new MojoExecutionException("Unable to load project runtime", e);
+			}
 		} catch (IOException e) {
 			throw new MojoExecutionException("Unable to initialize classPath", e);
 		}
 
-		final String prefix = "io.github.fuelcardmonitoring";
 		final ImmutableSet<ClassInfo> allClasses = classPath.getTopLevelClassesRecursive(prefix);
 
 		final Digraph digraph = graph.getDigraph();
 		digraph.setOptions("rankdir=LR");
 
-		Stream<ClassInfo> domain = allClasses.stream().filter(filter(prefix, "domain"));
+		Stream<ClassInfo> domain = allClasses.stream().filter(filter(prefix, coreDomain));
 		final Cluster core = digraph.addCluster("hexagon");
 		core.setLabel("Core Domain");
 
@@ -52,18 +81,19 @@ public class DiagramMojo extends AbstractMojo {
 		domain.forEach(new Consumer<ClassInfo>() {
 			public void accept(ClassInfo ci) {
 				final Class clazz = ci.load();
-				core.addNode(clazz.getName()).setLabel(clazz.getSimpleName()).setComment(clazz.getSimpleName());
+
+				addNode(core, clazz); //.addNode(clazz.getName()).setLabel(clazz.getSimpleName()).setComment(clazz.getSimpleName());
 			}
 		});
 
-		Stream<ClassInfo> infra = allClasses.stream().filter(filterNot(prefix, "domain"));
+		Stream<ClassInfo> infra = allClasses.stream().filter(filterNot(prefix, coreDomain));
 		infra.forEach(new Consumer<ClassInfo>() {
 			public void accept(ClassInfo ci) {
 				final Class clazz = ci.load();
-				digraph.addNode(clazz.getName()).setLabel(clazz.getSimpleName()).setComment(clazz.getSimpleName());
+				addNode(digraph, clazz);
 			}
 		});
-		infra = allClasses.stream().filter(filterNot(prefix, "domain"));
+		infra = allClasses.stream().filter(filterNot(prefix, coreDomain));
 		infra.forEach(new Consumer<ClassInfo>() {
 			public void accept(ClassInfo ci) {
 				final Class clazz = ci.load();
@@ -84,7 +114,7 @@ public class DiagramMojo extends AbstractMojo {
 		});
 
 		// then wire them together
-		domain = allClasses.stream().filter(filter(prefix, "domain"));
+		domain = allClasses.stream().filter(filter(prefix, coreDomain));
 		domain.forEach(new Consumer<ClassInfo>() {
 			public void accept(ClassInfo ci) {
 				final Class clazz = ci.load();
@@ -103,18 +133,23 @@ public class DiagramMojo extends AbstractMojo {
 		});
 
 		// render into image
-		final String template = readResource("viz-template.html");
+		final String template = readResource("/viz-template.html");
 
 		String title = "Living Diagram";
 		final String content = graph.render().trim();
 		final String text = evaluate(template, title, content);
 		try {
-			write("", "livinggdiagram.html", text);
+			write(outputDirectory.getPath(), "/livinggdiagram.html", text);
 		} catch (UnsupportedEncodingException e) {
 			throw new MojoExecutionException("Unable to initialize classPath", e);
 		} catch (FileNotFoundException e) {
 			throw new MojoExecutionException("Unable to initialize classPath", e);
 		}
+	}
+
+	private void addNode(DotGraph.AbstractNode digraph, Class clazz) {
+		if (!clazz.getSimpleName().equalsIgnoreCase("package-info"))
+			digraph.addNode(clazz.getName()).setLabel(clazz.getSimpleName()).setComment(clazz.getSimpleName());
 	}
 
 	private Predicate<ClassInfo> filter(final String prefix, final String layer) {
@@ -140,4 +175,17 @@ public class DiagramMojo extends AbstractMojo {
 
 		};
 	}
+
+	private ClassLoader getRuntimeClassLoader() throws DependencyResolutionRequiredException, MalformedURLException {
+		List<String> runtimeClasspathElements = project.getRuntimeClasspathElements();
+		URL[] runtimeUrls = new URL[runtimeClasspathElements.size()];
+		for (int i = 0; i < runtimeClasspathElements.size(); i++) {
+			String element = (String) runtimeClasspathElements.get(i);
+			runtimeUrls[i] = new File(element).toURI().toURL();
+		}
+
+		return new URLClassLoader(runtimeUrls,
+				Thread.currentThread().getContextClassLoader());
+	}
+
 }

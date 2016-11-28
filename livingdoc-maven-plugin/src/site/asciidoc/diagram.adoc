@@ -1,0 +1,43 @@
+= Word Cloud
+
+== Description
+
+Generate a diagram with heagonal architecture view from code analysis.
+
+mojo:: `diagram`
+
+== Configuration
+
+prefix:: the prefix of packages to scan (required, no default)
+
+coreDomain:: the package name of the core business model (default is `domain`)
+
+outputDirectory:: the outpout directory (default is `target/generated-docs`)
+
+
+== Usage
+
+.Maven
+[source, xml]
+----
+            <plugin>
+                <groupId>io.github.livingdocumentation</groupId>
+                <artifactId>livingdoc-maven-plugin</artifactId>
+                <version>${plugin.livingdoc-maven-plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>diagram</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>diagram</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <configuration>
+                    <prefix>${mycode.package.prefix}</prefix>
+                    <codeDomain>domain</codeDomain>
+
+
+                </configuration>
+            </plugin>
+----
