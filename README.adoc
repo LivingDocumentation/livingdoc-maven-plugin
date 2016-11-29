@@ -20,6 +20,8 @@ include::livingdoc-maven-plugin/src/site/asciidoc/glossary.adoc[]
 
 include::livingdoc-maven-plugin/src/site/asciidoc/wordcloud.adoc[]
 
+include::livingdoc-maven-plugin/src/site/asciidoc/diagram.adoc[]
+
 ifndef::env-github[]
 :leveloffset: -2
 endif::[]
