@@ -138,6 +138,7 @@ public class WordCloudMojo extends AbstractMojo {
 			String content = toJSON(bag, scaling);
 
 			final String text = SimpleTemplate.evaluate(template, title, content);
+			outputDirectory.mkdirs();
 			SimpleTemplate.write("", outputDirectory + "/" + OUTPUT_FILENAME + ".html" , text);
 		} catch (IOException e) {
 			throw new UncheckedIOException(e);

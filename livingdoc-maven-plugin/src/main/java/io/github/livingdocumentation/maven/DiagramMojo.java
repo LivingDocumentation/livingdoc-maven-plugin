@@ -81,6 +81,7 @@ public class DiagramMojo extends AbstractMojo {
 		final String content = graph.render().trim();
 		final String text = evaluate(template, title, content);
 		try {
+			outputDirectory.mkdirs();
 			write(outputDirectory.getPath(), "/livinggdiagram.html", text);
 		} catch (UnsupportedEncodingException | FileNotFoundException e) {
 			throw new MojoExecutionException("Unable to initialize classPath", e);
