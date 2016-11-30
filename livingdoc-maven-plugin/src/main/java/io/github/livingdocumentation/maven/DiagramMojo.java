@@ -23,9 +23,7 @@ import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.List;
-import java.util.function.Consumer;
 import java.util.function.Predicate;
-import java.util.stream.Stream;
 
 import static io.github.livingdocumentation.maven.SimpleTemplate.*;
 import static io.github.livingdocumentation.dotdiagram.DotStyles.ASSOCIATION_EDGE_STYLE;
@@ -56,81 +54,25 @@ public class DiagramMojo extends AbstractMojo {
 
 	@Override
 	public void execute() throws MojoExecutionException {
-		final ClassPath classPath;
-		try {
-//			classPath = ClassPath.from(Thread.currentThread().getContextClassLoader());
-			try {
-				classPath = ClassPath.from(getRuntimeClassLoader());
-			} catch (DependencyResolutionRequiredException e) {
-				throw new MojoExecutionException("Unable to load project runtime", e);
-			}
-		} catch (IOException e) {
-			throw new MojoExecutionException("Unable to initialize classPath", e);
-		}
+		final ClassPath classPath = initClassPath();
 
 		final ImmutableSet<ClassInfo> allClasses = classPath.getTopLevelClassesRecursive(prefix);
 
 		final Digraph digraph = graph.getDigraph();
 		digraph.setOptions("rankdir=LR");
 
-		Stream<ClassInfo> domain = allClasses.stream().filter(filter(prefix, coreDomain));
 		final Cluster core = digraph.addCluster("hexagon");
 		core.setLabel("Core Domain");
 
 		// add all domain model elements first
-		domain.forEach(new Consumer<ClassInfo>() {
-			public void accept(ClassInfo ci) {
-				final Class clazz = ci.load();
+		allClasses.stream().filter(filter(prefix, coreDomain)).map(ClassInfo::load).forEach(clazz -> addNode(core, clazz));
 
-				addNode(core, clazz); //.addNode(clazz.getName()).setLabel(clazz.getSimpleName()).setComment(clazz.getSimpleName());
-			}
-		});
+		allClasses.stream().filter(filterNot(prefix, coreDomain)).map(ClassInfo::load).forEach(clazz -> addNode(digraph, clazz));
 
-		Stream<ClassInfo> infra = allClasses.stream().filter(filterNot(prefix, coreDomain));
-		infra.forEach(new Consumer<ClassInfo>() {
-			public void accept(ClassInfo ci) {
-				final Class clazz = ci.load();
-				addNode(digraph, clazz);
-			}
-		});
-		infra = allClasses.stream().filter(filterNot(prefix, coreDomain));
-		infra.forEach(new Consumer<ClassInfo>() {
-			public void accept(ClassInfo ci) {
-				final Class clazz = ci.load();
-				// API
-				for (Field field : clazz.getDeclaredFields()) {
-					final Class<?> type = field.getType();
-					if (!type.isPrimitive()) {
-						digraph.addExistingAssociation(clazz.getName(), type.getName(), null, null,
-								ASSOCIATION_EDGE_STYLE);
-					}
-				}
-
-				// SPI
-				for (Class intf : clazz.getInterfaces()) {
-					digraph.addExistingAssociation(intf.getName(), clazz.getName(), null, null, IMPLEMENTS_EDGE_STYLE);
-				}
-			}
-		});
+		allClasses.stream().filter(filterNot(prefix, coreDomain)).map(ClassInfo::load).forEach(clazz -> addAssociations(digraph, clazz));
 
 		// then wire them together
-		domain = allClasses.stream().filter(filter(prefix, coreDomain));
-		domain.forEach(new Consumer<ClassInfo>() {
-			public void accept(ClassInfo ci) {
-				final Class clazz = ci.load();
-				for (Field field : clazz.getDeclaredFields()) {
-					final Class<?> type = field.getType();
-					if (!type.isPrimitive()) {
-						digraph.addExistingAssociation(clazz.getName(), type.getName(), null, null,
-								ASSOCIATION_EDGE_STYLE);
-					}
-				}
-
-				for (Class intf : clazz.getInterfaces()) {
-					digraph.addExistingAssociation(intf.getName(), clazz.getName(), null, null, IMPLEMENTS_EDGE_STYLE);
-				}
-			}
-		});
+		allClasses.stream().filter(filter(prefix, coreDomain)).map(ClassInfo::load).forEach(clazz -> addAssociations(digraph, clazz));
 
 		// render into image
 		final String template = readResource("/viz-template.html");
@@ -140,11 +82,37 @@ public class DiagramMojo extends AbstractMojo {
 		final String text = evaluate(template, title, content);
 		try {
 			write(outputDirectory.getPath(), "/livinggdiagram.html", text);
-		} catch (UnsupportedEncodingException e) {
-			throw new MojoExecutionException("Unable to initialize classPath", e);
-		} catch (FileNotFoundException e) {
+		} catch (UnsupportedEncodingException | FileNotFoundException e) {
 			throw new MojoExecutionException("Unable to initialize classPath", e);
 		}
+	}
+
+	private ClassPath initClassPath() throws MojoExecutionException {
+		final ClassPath classPath;
+		try {
+			try {
+				classPath = ClassPath.from(getRuntimeClassLoader());
+			} catch (DependencyResolutionRequiredException e) {
+				throw new MojoExecutionException("Unable to load project runtime", e);
+			}
+		} catch (IOException e) {
+			throw new MojoExecutionException("Unable to initialize classPath", e);
+		}
+		return classPath;
+	}
+
+	private void addAssociations(Digraph digraph, Class clazz) {
+		// API
+		for (Field field : clazz.getDeclaredFields()) {
+            final Class<?> type = field.getType();
+            if (!type.isPrimitive()) {
+                digraph.addExistingAssociation(clazz.getName(), type.getName(), null, null, ASSOCIATION_EDGE_STYLE);
+            }
+        }
+		// SPI
+		for (Class intf : clazz.getInterfaces()) {
+            digraph.addExistingAssociation(intf.getName(), clazz.getName(), null, null, IMPLEMENTS_EDGE_STYLE);
+        }
 	}
 
 	private void addNode(DotGraph.AbstractNode digraph, Class clazz) {
@@ -153,39 +121,25 @@ public class DiagramMojo extends AbstractMojo {
 	}
 
 	private Predicate<ClassInfo> filter(final String prefix, final String layer) {
-		return new Predicate<ClassInfo>() {
-			public boolean test(ClassInfo ci) {
-				final boolean nameConvention = ci.getPackageName().startsWith(prefix)
-						&& !ci.getSimpleName().endsWith("Test") && !ci.getSimpleName().endsWith("IT")
-						&& ci.getPackageName().endsWith("." + layer);
-				return nameConvention;
-			}
-
-		};
+		return ci -> ci.getPackageName().startsWith(prefix)
+				&& !ci.getSimpleName().endsWith("Test") && !ci.getSimpleName().endsWith("IT")
+				&& ci.getPackageName().endsWith("." + layer);
 	}
 
 	private Predicate<ClassInfo> filterNot(final String prefix, final String layer) {
-		return new Predicate<ClassInfo>() {
-			public boolean test(ClassInfo ci) {
-				final boolean nameConvention = ci.getPackageName().startsWith(prefix)
-						&& !ci.getSimpleName().endsWith("Test") && !ci.getSimpleName().endsWith("IT")
-						&& !ci.getPackageName().endsWith("." + layer);
-				return nameConvention;
-			}
-
-		};
+		return ci -> ci.getPackageName().startsWith(prefix)
+				&& !ci.getSimpleName().endsWith("Test") && !ci.getSimpleName().endsWith("IT")
+				&& !ci.getPackageName().endsWith("." + layer);
 	}
 
 	private ClassLoader getRuntimeClassLoader() throws DependencyResolutionRequiredException, MalformedURLException {
 		List<String> runtimeClasspathElements = project.getRuntimeClasspathElements();
 		URL[] runtimeUrls = new URL[runtimeClasspathElements.size()];
 		for (int i = 0; i < runtimeClasspathElements.size(); i++) {
-			String element = (String) runtimeClasspathElements.get(i);
+			String element = runtimeClasspathElements.get(i);
 			runtimeUrls[i] = new File(element).toURI().toURL();
 		}
-
-		return new URLClassLoader(runtimeUrls,
-				Thread.currentThread().getContextClassLoader());
+		return new URLClassLoader(runtimeUrls, Thread.currentThread().getContextClassLoader());
 	}
 
 }
