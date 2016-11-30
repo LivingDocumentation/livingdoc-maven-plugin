@@ -32,6 +32,7 @@
             <item name="Usage" href="usage.html"/>
             <item name="Glossary" href="glossary.html"/>
             <item name="WordCloud" href="wordcloud.html"/>
+            <item name="Diagram" href="diagram.html"/>
         </menu>
         <menu ref="reports"/>
     </body>

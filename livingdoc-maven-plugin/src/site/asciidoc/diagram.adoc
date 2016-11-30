@@ -1,8 +1,8 @@
-= Word Cloud
+= Diagram
 
 == Description
 
-Generate a diagram with heagonal architecture view from code analysis.
+Generate a diagram with hexagonal architecture view from code analysis.
 
 mojo:: `diagram`
 
@@ -20,24 +20,22 @@ outputDirectory:: the outpout directory (default is `target/generated-docs`)
 .Maven
 [source, xml]
 ----
-            <plugin>
-                <groupId>io.github.livingdocumentation</groupId>
-                <artifactId>livingdoc-maven-plugin</artifactId>
-                <version>${plugin.livingdoc-maven-plugin.version}</version>
-                <executions>
-                    <execution>
-                        <id>diagram</id>
-                        <phase>generate-resources</phase>
-                        <goals>
-                            <goal>diagram</goal>
-                        </goals>
-                    </execution>
-                </executions>
-                <configuration>
-                    <prefix>${mycode.package.prefix}</prefix>
-                    <codeDomain>domain</codeDomain>
-
-
-                </configuration>
-            </plugin>
+    <plugin>
+        <groupId>io.github.livingdocumentation</groupId>
+        <artifactId>livingdoc-maven-plugin</artifactId>
+        <version>${plugin.livingdoc-maven-plugin.version}</version>
+        <executions>
+            <execution>
+                <id>diagram</id>
+                <phase>generate-resources</phase>
+                <goals>
+                    <goal>diagram</goal>
+                </goals>
+            </execution>
+        </executions>
+        <configuration>
+            <prefix>${mycode.package.prefix}</prefix>
+            <codeDomain>domain</codeDomain>
+        </configuration>
+    </plugin>
 ----
