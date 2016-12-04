@@ -35,7 +35,7 @@ import static io.github.livingdocumentation.dotdiagram.DotStyles.IMPLEMENTS_EDGE
  *
  */
 
-@Mojo(name = "diagram", requiresDependencyResolution = ResolutionScope.RUNTIME)
+@Mojo(name = "diagram", requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class DiagramMojo extends AbstractMojo {
 
 	private final DotGraph graph = new DotGraph("Hexagonal Architecture", "LR");
@@ -102,6 +102,29 @@ public class DiagramMojo extends AbstractMojo {
 		return classPath;
 	}
 
+	private ClassLoader getRuntimeClassLoader() throws DependencyResolutionRequiredException, MalformedURLException {
+		List<String> runtimeClasspathElements = project.getRuntimeClasspathElements();
+		List<String> compileClasspathElements = project.getCompileClasspathElements();
+		URL[] runtimeUrls = new URL[runtimeClasspathElements.size() + compileClasspathElements.size()];
+		for (int i = 0; i < runtimeClasspathElements.size(); i++) {
+			String element = runtimeClasspathElements.get(i);
+			runtimeUrls[i] = new File(element).toURI().toURL();
+		}
+
+		int j = runtimeClasspathElements.size();
+
+		for (int i = 0; i < compileClasspathElements.size(); i++) {
+			String element = compileClasspathElements.get(i);
+			runtimeUrls[i + j] = new File(element).toURI().toURL();
+		}
+
+
+		return new URLClassLoader(runtimeUrls, Thread.currentThread().getContextClassLoader());
+	}
+
+
+
+
 	private void addAssociations(Digraph digraph, Class clazz) {
 		// API
 		for (Field field : clazz.getDeclaredFields()) {
@@ -131,16 +154,6 @@ public class DiagramMojo extends AbstractMojo {
 		return ci -> ci.getPackageName().startsWith(prefix)
 				&& !ci.getSimpleName().endsWith("Test") && !ci.getSimpleName().endsWith("IT")
 				&& !ci.getPackageName().endsWith("." + layer);
-	}
-
-	private ClassLoader getRuntimeClassLoader() throws DependencyResolutionRequiredException, MalformedURLException {
-		List<String> runtimeClasspathElements = project.getRuntimeClasspathElements();
-		URL[] runtimeUrls = new URL[runtimeClasspathElements.size()];
-		for (int i = 0; i < runtimeClasspathElements.size(); i++) {
-			String element = runtimeClasspathElements.get(i);
-			runtimeUrls[i] = new File(element).toURI().toURL();
-		}
-		return new URLClassLoader(runtimeUrls, Thread.currentThread().getContextClassLoader());
 	}
 
 }
