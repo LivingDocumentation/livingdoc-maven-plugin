@@ -57,7 +57,7 @@ public class DiagramMojo extends AbstractMojo {
 	 * List of packages to exclude. Specified as regexp.
 	 */
 	@Parameter
-	private String[] packageExcludes;
+	private String[] packageExcludes = new String[0];
 
 
 	@Override
