@@ -22,6 +22,7 @@ import java.lang.reflect.Field;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.net.URLClassLoader;
+import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -51,6 +52,13 @@ public class DiagramMojo extends AbstractMojo {
 
 	@Parameter(defaultValue = "${project.build.directory}/generated-docs")
 	private File outputDirectory;
+
+	/**
+	 * List of packages to exclude. Specified as regexp.
+	 */
+	@Parameter
+	private String[] packageExcludes;
+
 
 	@Override
 	public void execute() throws MojoExecutionException {
@@ -147,13 +155,15 @@ public class DiagramMojo extends AbstractMojo {
 	private Predicate<ClassInfo> filter(final String prefix, final String layer) {
 		return ci -> ci.getPackageName().startsWith(prefix)
 				&& !ci.getSimpleName().endsWith("Test") && !ci.getSimpleName().endsWith("IT")
-				&& ci.getPackageName().endsWith("." + layer);
+				&& ci.getPackageName().endsWith("." + layer)
+				&& Arrays.stream(packageExcludes).noneMatch( excl -> ci.getPackageName().matches(excl) ) ;
 	}
 
 	private Predicate<ClassInfo> filterNot(final String prefix, final String layer) {
 		return ci -> ci.getPackageName().startsWith(prefix)
 				&& !ci.getSimpleName().endsWith("Test") && !ci.getSimpleName().endsWith("IT")
-				&& !ci.getPackageName().endsWith("." + layer);
+				&& !ci.getPackageName().endsWith("." + layer)
+				&& Arrays.stream(packageExcludes).noneMatch( excl -> ci.getPackageName().matches(excl) );
 	}
 
 }
