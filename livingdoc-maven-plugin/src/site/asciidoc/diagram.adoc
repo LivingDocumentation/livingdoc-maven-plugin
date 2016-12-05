@@ -14,6 +14,8 @@ coreDomain:: the package name of the core business model (default is `domain`)
 
 outputDirectory:: the outpout directory (default is `target/generated-docs`)
 
+packageExcludes:: list of regex to exclude packages from the diagram  (default is an empty list)
+
 
 == Usage
 
@@ -35,7 +37,11 @@ outputDirectory:: the outpout directory (default is `target/generated-docs`)
         </executions>
         <configuration>
             <prefix>${mycode.package.prefix}</prefix>
-            <codeDomain>domain</codeDomain>
+            <coreDomain>domain</coreDomain>
+            <packageExcludes>
+                <packageExcludes>regex1</packageExcludes>
+                <packageExcludes>regex2</packageExcludes>
+            </packageExcludes>
         </configuration>
     </plugin>
 ----
