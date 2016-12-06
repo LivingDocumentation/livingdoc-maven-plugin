@@ -33,7 +33,7 @@
         <dependency>
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
-            <version>RELEASE</version>
+            <version>20.0</version>
         </dependency>
 
 
@@ -115,7 +115,7 @@
                     <execution>
                         <id>integration-test</id>
                         <goals>
-                            <goal>verify</goal>
+                            <goal>install</goal>
                             <goal>run</goal>
                         </goals>
                     </execution>

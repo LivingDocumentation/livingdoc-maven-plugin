@@ -19,7 +19,7 @@
             <plugin>
                 <groupId>io.github.livingdocumentation</groupId>
                 <artifactId>livingdoc-maven-plugin</artifactId>
-                <version>0.1</version>
+                <version>@project.version@</version>
                 <executions>
                     <execution>
                         <id>glossary</id>
