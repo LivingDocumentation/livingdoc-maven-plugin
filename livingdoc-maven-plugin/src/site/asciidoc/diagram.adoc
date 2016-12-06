@@ -29,7 +29,6 @@ packageExcludes:: list of regex to exclude packages from the diagram  (default i
         <executions>
             <execution>
                 <id>diagram</id>
-                <phase>generate-resources</phase>
                 <goals>
                     <goal>diagram</goal>
                 </goals>

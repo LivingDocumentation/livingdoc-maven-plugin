@@ -9,6 +9,7 @@ import io.github.livingdocumentation.dotdiagram.DotGraph.Digraph;
 import org.apache.maven.artifact.DependencyResolutionRequiredException;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugin.MojoExecutionException;
+import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
 import org.apache.maven.plugins.annotations.ResolutionScope;
@@ -36,7 +37,8 @@ import static io.github.livingdocumentation.dotdiagram.DotStyles.IMPLEMENTS_EDGE
  *
  */
 
-@Mojo(name = "diagram", requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
+@Mojo(name = "diagram", requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME,
+		defaultPhase = LifecyclePhase.PROCESS_CLASSES)
 public class DiagramMojo extends AbstractMojo {
 
 	private final DotGraph graph = new DotGraph("Hexagonal Architecture", "LR");
