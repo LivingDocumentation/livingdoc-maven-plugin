@@ -1,0 +1,46 @@
+= Diagram
+
+== Description
+
+Generate a diagram with hexagonal architecture view from code analysis.
+
+mojo:: `diagram`
+
+== Configuration
+
+prefix:: the prefix of packages to scan (required, no default)
+
+coreDomain:: the package name of the core business model (default is `domain`)
+
+outputDirectory:: the outpout directory (default is `target/generated-docs`)
+
+packageExcludes:: list of regex to exclude packages from the diagram  (default is an empty list)
+
+
+== Usage
+
+.Maven
+[source, xml]
+----
+    <plugin>
+        <groupId>io.github.livingdocumentation</groupId>
+        <artifactId>livingdoc-maven-plugin</artifactId>
+        <version>${plugin.livingdoc-maven-plugin.version}</version>
+        <executions>
+            <execution>
+                <id>diagram</id>
+                <goals>
+                    <goal>diagram</goal>
+                </goals>
+            </execution>
+        </executions>
+        <configuration>
+            <prefix>${mycode.package.prefix}</prefix>
+            <coreDomain>domain</coreDomain>
+            <packageExcludes>
+                <packageExcludes>regex1</packageExcludes>
+                <packageExcludes>regex2</packageExcludes>
+            </packageExcludes>
+        </configuration>
+    </plugin>
+----

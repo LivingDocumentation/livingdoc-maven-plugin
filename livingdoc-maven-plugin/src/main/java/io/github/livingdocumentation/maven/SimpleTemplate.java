@@ -1,4 +1,4 @@
-package io.github.livingdocumentation;
+package io.github.livingdocumentation.maven;
 
 import java.io.*;
 
