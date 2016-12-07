@@ -1,0 +1,22 @@
+= Usage
+
+== Plugin
+
+[source, xml]
+----
+    <plugin>
+        <groupId>io.github.livingdocumentation</groupId>
+        <artifactId>livingdoc-maven-plugin</artifactId>
+        <version>${plugin.livingdoc-maven-plugin.version}</version>
+        <executions>
+            <execution>
+                <id>living-doc</id>
+                <phase>generate-resources</phase>
+                <goals>
+                    <goal>GOAL_NAME</goal><1>
+                </goals>
+            </execution>
+        </executions>
+    </plugin>
+----
+<1> the plugin provides a list of goal for each kind of documentation
