@@ -15,8 +15,6 @@ import org.asciidoctor.SafeMode;
 
 import java.io.*;
 import java.nio.charset.StandardCharsets;
-import java.nio.file.FileSystemException;
-import java.nio.file.Files;
 import java.util.List;
 
 @Mojo(name = "glossary")
@@ -60,12 +58,6 @@ public class GlossaryMojo extends AbstractMojo {
                 Asciidoctor asciidoctor = Asciidoctor.Factory.create();
                 File asciidocFile = new File(outputDirectory, OUTPUT_FILENAME  + ".adoc");
                 asciidoctor.convertFile(asciidocFile, OptionsBuilder.options().backend("html5").safe(SafeMode.UNSAFE).asMap());
-                // Try-catch for temporary workaround of issue #14 (due to issue of asciidoctor)
-                try {
-                    Files.deleteIfExists(asciidocFile.toPath());
-                } catch (FileSystemException exception) {
-                    getLog().debug(exception.getMessage());
-                }
             }
         } catch (IOException e) {
             throw new UncheckedIOException(e);
