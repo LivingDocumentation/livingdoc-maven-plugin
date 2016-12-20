@@ -1,4 +1,6 @@
-package io.github.livingdocumentation.maven;
+package io.github.livingdocumentation.maven.commons;
+
+import org.apache.maven.shared.utils.StringUtils;
 
 import java.io.*;
 
@@ -31,7 +33,12 @@ public class SimpleTemplate {
 
 	public static void write(String path, String filename, String content) throws UnsupportedEncodingException,
 			FileNotFoundException {
-		final String outputFileName = path + filename;
+		String outputFileName;
+		if (StringUtils.isEmpty(path)) {
+			outputFileName = filename;
+		} else {
+			outputFileName = path + "/" + filename;
+		}
 		final String outputEncoding = "ISO-8859-1";
 		final FileOutputStream fos = new FileOutputStream(outputFileName);
 		final PrintWriter w = new PrintWriter(new BufferedWriter(new OutputStreamWriter(fos, outputEncoding)));

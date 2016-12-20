@@ -27,7 +27,7 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.function.Predicate;
 
-import static io.github.livingdocumentation.maven.SimpleTemplate.*;
+import static io.github.livingdocumentation.maven.commons.SimpleTemplate.*;
 import static io.github.livingdocumentation.dotdiagram.DotStyles.ASSOCIATION_EDGE_STYLE;
 import static io.github.livingdocumentation.dotdiagram.DotStyles.IMPLEMENTS_EDGE_STYLE;
 

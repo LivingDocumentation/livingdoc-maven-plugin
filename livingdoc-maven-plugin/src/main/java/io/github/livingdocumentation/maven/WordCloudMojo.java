@@ -2,6 +2,7 @@ package io.github.livingdocumentation.maven;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+import io.github.livingdocumentation.maven.commons.SimpleTemplate;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
