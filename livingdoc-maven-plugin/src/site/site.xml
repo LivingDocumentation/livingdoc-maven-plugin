@@ -33,6 +33,7 @@
             <item name="Glossary" href="glossary.html"/>
             <item name="WordCloud" href="wordcloud.html"/>
             <item name="Diagram" href="diagram.html"/>
+            <item name="Guided Tour" href="tour.html"/>
         </menu>
         <menu ref="reports"/>
     </body>

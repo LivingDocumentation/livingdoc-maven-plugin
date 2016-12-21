@@ -22,18 +22,30 @@ public class GuidedTourMojo extends AbstractMojo {
 
     private static final String SEP = "\n\n";
 
-    @Parameter(defaultValue = "${project.build.sourceDirectory}")
+    @Parameter(defaultValue = "${project.build.sourceDirectory}", readonly=true)
     private List<String> sources;
 
+    /**
+     * Package prefix of classes to browse for Guided Tour documentation
+     */
     @Parameter
     private String prefix;
 
+    /**
+     * Fully qualified annotation marking classes of the guided tour
+     */
     @Parameter
-    private String tourAnnotation = "flottio.annotations.GuidedTour";
+    private String tourAnnotation;
 
+    /**
+     * Root link to CVS, used for links in generated documentation
+     */
     @Parameter
-    private String repositoryLink = "https://github.com/cyriux/livingdocumentation-workshop/blob/master/living-documentation-workshop";
+    private String repositoryLink;
 
+    /**
+     * Directory where to generated docs
+     */
     @Parameter(defaultValue = "${project.build.directory}/generated-docs")
     private File outputDirectory;
 
