@@ -44,6 +44,12 @@ public class GuidedTourMojo extends AbstractMojo {
     private String repositoryLink;
 
     /**
+     * Strapdown theme name (united or cerulean)
+     */
+    @Parameter
+    private String theme = "united";
+
+    /**
      * Directory where to generated docs
      */
     @Parameter(defaultValue = "${project.build.directory}/generated-docs")
@@ -121,7 +127,7 @@ public class GuidedTourMojo extends AbstractMojo {
         }
         String title = tourName;
         String content = out.toString();
-        final String text = MessageFormat.format(template, new Object[] { title, content });
+        final String text = MessageFormat.format(template, new Object[] { title, theme, content });
         SimpleTemplate.write(outputDirectory.getPath(), tourName.replaceAll(" ", "_") + ".html", text);
         writer.close();
 

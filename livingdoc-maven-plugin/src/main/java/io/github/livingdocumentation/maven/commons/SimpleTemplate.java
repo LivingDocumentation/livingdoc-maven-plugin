@@ -39,7 +39,7 @@ public class SimpleTemplate {
 		} else {
 			outputFileName = path + "/" + filename;
 		}
-		final String outputEncoding = "ISO-8859-1";
+		final String outputEncoding = "UTF-8";
 		final FileOutputStream fos = new FileOutputStream(outputFileName);
 		final PrintWriter w = new PrintWriter(new BufferedWriter(new OutputStreamWriter(fos, outputEncoding)));
 

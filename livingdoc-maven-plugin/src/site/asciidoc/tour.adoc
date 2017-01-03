@@ -17,6 +17,8 @@ tourAnnotation:: fully qualified package of the annotation (the annotation needs
 
 repositoryLink:: root link to source repository
 
+theme:: theme used for pretty print (united -red- or cerulean -blue-, default is united)
+
 == Usage
 
 .Maven
