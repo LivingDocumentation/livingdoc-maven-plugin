@@ -16,6 +16,8 @@ outputDirectory:: the outpout directory (default is `target/generated-docs`)
 
 packageExcludes:: list of regex to exclude packages from the diagram  (default is an empty list)
 
+clusters:: suffixes list of packages to draw a cluster for classes in thoses package. There will be one cluster by
+package (default is an empty list)
 
 == Usage
 

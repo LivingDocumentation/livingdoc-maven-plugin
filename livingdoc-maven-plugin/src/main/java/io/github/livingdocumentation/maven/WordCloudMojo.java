@@ -2,6 +2,7 @@ package io.github.livingdocumentation.maven;
 
 import com.google.common.collect.HashMultiset;
 import com.google.common.collect.Multiset;
+import io.github.livingdocumentation.maven.commons.SimpleTemplate;
 import org.apache.maven.plugin.AbstractMojo;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
@@ -18,9 +19,15 @@ public class WordCloudMojo extends AbstractMojo {
 	private static final String[] DEFAULT_EXCLUDES = new String[] { "**/package-info.java" };
 	private static final String[] DEFAULT_INCLUDES = new String[] { "**/*.java" };
 
+	/**
+	 * List of source file directories to browse
+	 */
 	@Parameter(defaultValue = "${project.build.sourceDirectory}")
 	private List<String> sources;
 
+	/**
+	 * Directory where the word cloud will be generated
+	 */
 	@Parameter(defaultValue = "${project.build.directory}/generated-docs")
 	private File outputDirectory;
 
