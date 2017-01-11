@@ -5,7 +5,7 @@
 
     <groupId>io.github.livingdocumentation</groupId>
     <artifactId>livingdoc-parent</artifactId>
-    <version>0.3</version>
+    <version>0.4-SNAPSHOT</version>
     <modules>
         <module>livingdoc-maven-plugin</module>
         <module>shared-resources</module>
