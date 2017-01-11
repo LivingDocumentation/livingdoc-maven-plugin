@@ -22,6 +22,9 @@ public class GuidedTourMojo extends AbstractMojo {
 
     private static final String SEP = "\n\n";
 
+    /**
+     * Directory where the diagram files will be generated
+     */
     @Parameter(defaultValue = "${project.build.sourceDirectory}", readonly=true)
     private List<String> sources;
 

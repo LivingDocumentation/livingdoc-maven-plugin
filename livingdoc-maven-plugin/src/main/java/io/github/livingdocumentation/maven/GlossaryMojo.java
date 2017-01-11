@@ -22,15 +22,27 @@ public class GlossaryMojo extends AbstractMojo {
 
     private static final String OUTPUT_FILENAME = "glossary";
 
+    /**
+     * List of source directories to browse
+     */
     @Parameter(defaultValue = "${project.build.sourceDirectory}")
     private List<String> sources;
 
+    /**
+     * Directory where the glossary will be generated
+     */
     @Parameter(defaultValue = "${project.build.directory}/generated-docs")
     private File outputDirectory;
 
+    /**
+     * Output format of the glossary (default html, others : adoc)
+     */
     @Parameter(defaultValue = "html")
     private String format;
 
+    /**
+     * Annotation used to comment classes that will be included in the glossary (default: Glossary)
+     */
     @Parameter(defaultValue = "Glossary")
     private String annotation;
 
