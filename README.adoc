@@ -1,5 +1,7 @@
 = Living Documentation Maven Plugin
 
+image:https://travis-ci.org/LivingDocumentation/livingdoc-maven-plugin.svg?branch=develop["Build Status", link="https://travis-ci.org/LivingDocumentation/livingdoc-maven-plugin"]
+
 == Objective
 
 Use maven plugin to generate project documentation.
