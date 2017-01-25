@@ -1,8 +1,0 @@
-import java.io.*;
-import java.util.*;
-
-File file = new File(basedir, "target" + File.separator + "generated-docs" + File.separator + "glossary.html");
-
-System.out.println( "file: " + file + " exists? " + file.exists() );
-
-return file.exists();
