@@ -1,6 +1,7 @@
 = Living Documentation Maven Plugin
 
 image:https://travis-ci.org/LivingDocumentation/livingdoc-maven-plugin.svg?branch=develop["Build Status", link="https://travis-ci.org/LivingDocumentation/livingdoc-maven-plugin"]
+image:https://maven-badges.herokuapp.com/maven-central/io.github.livingdocumentation/livingdoc-maven-plugin/badge.svg["Maven central", link="https://maven-badges.herokuapp.com/maven-central/io.github.livingdocumentation/livingdoc-maven-plugin"]
 
 == Objective
 
